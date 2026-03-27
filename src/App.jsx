@@ -136,7 +136,7 @@ function PageCard({ page, index, onRemove }) {
       <div className="mt-3 flex items-center justify-between gap-3">
         <div className="min-w-0">
           <div className="text-sm font-semibold text-slate-800">Stránka {index + 1}</div>
-          <div className="text-xs text-slate-500">Připraveno do PDF</div>
+          <div className="text-xs text-slate-500">Připraveno do PDF · můžete přidat další stránku</div>
         </div>
 
         <button
@@ -153,6 +153,7 @@ function PageCard({ page, index, onRemove }) {
 }
 
 export default function OnlineScanApp() {
+  const pagesSectionRef = useRef(null);
   const cameraInputRef = useRef(null);
   const galleryInputRef = useRef(null);
 
@@ -195,6 +196,15 @@ export default function OnlineScanApp() {
       }
 
       setPages((current) => [...current, ...processedPages]);
+
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          pagesSectionRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }, 120);
+      });
     } catch (processingError) {
       setError("Nepodařilo se zpracovat obrázky. Zkuste je prosím vyfotit znovu.");
     } finally {
@@ -385,7 +395,7 @@ export default function OnlineScanApp() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-8">
+          <div ref={pagesSectionRef} className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-8">
             <div className="mb-5 flex items-center justify-between gap-3">
               <h2 className="text-xl font-semibold text-slate-900">Stránky</h2>
               <span className="text-sm text-slate-500">{processedCount} připraveno</span>
